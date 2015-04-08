@@ -64,6 +64,43 @@ void setup(void) /*----( SETUP: RUNS ONCE )----*/
   sensors.begin();
 }/*--(end setup )---*/
 
+// OH sensor
+void serialEvent2() {
+  if (!oh_sensor_string_complete) {
+    while(Serial2.available()) {
+      char in_char = (char)Serial2.read();
+      if (in_char == '\r') {
+        break;
+      }
+      oh_sensor_string += in_char;
+    }
+    if (oh_sensor_string.length() != 5) { // Avoid trash data sent sometimes by the sensor
+      oh_sensor_string = "";
+      return;
+    }
+    oh_sensor_string = "OH : " + oh_sensor_string;
+    oh_sensor_string_complete = true;
+  }
+}
+ 
+//PH sensor
+void serialEvent3() {
+  if (!ph_sensor_string_complete) {
+    while(Serial3.available()) {
+      char in_char = (char)Serial3.read();
+      ph_sensor_string += in_char;
+      if (in_char == '\r') {
+        break;
+      }
+    }
+    if (ph_sensor_string.length() != 5) { // Avoid trash data sent sometimes by the sensor
+      ph_sensor_string = "";
+      return;
+    }
+    ph_sensor_string = "PH : " + ph_sensor_string;
+    ph_sensor_string_complete = true;
+  }
+}
 
 void loop() /*----( LOOP: RUNS CONSTANTLY )----*/
 {
